@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My AR Ganesha with Music</title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
+    <style>
+      body {
+        margin: 0; font-family: system-ui, sans-serif; background: #f6f7fb;
+        display: grid; place-items: center; min-height: 100vh; padding: 16px;
+      }
+      .card {
+        width: min(900px, 100%); background: #fff; border-radius: 20px; padding: 16px;
+        box-shadow: 0 10px 25px rgba(0,0,0,.08);
+      }
+      h1 { margin: 0 0 8px; font-size: 24px; }
+      p { margin: 0 0 12px; line-height: 1.5; }
+      model-viewer {
+        width: 100%; height: 60vh; background: #fff; border-radius: 16px;
+      }
+      .controls {
+        display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-top: 12px;
+      }
+      .row { display: flex; gap: 8px; align-items: center; }
+      input[type="range"] { width: 220px; }
+      button {
+        background: #4f46e5; color: white; border: 0; padding: 10px 14px; border-radius: 12px; cursor: pointer;
+        font-weight: 600;
+      }
+      footer { text-align: center; font-size: 12px; opacity: .7; margin-top: 8px; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>🎶 My 3D Ganesha</h1>
+      <p>Rotate, zoom, and scale the 3D Ganesha idol below.</p>
+
+      <model-viewer id="viewer"
+        src="ganesha.glb"
+        alt="Ganesha idol"
+        camera-controls
+        auto-rotate
+        shadow-intensity="1"
+        exposure="0.9"
+        environment-image="neutral"
+        style="display:block; margin:auto;">
+      </model-viewer>
+
+      <div class="controls">
+        <div class="row">
+          <label>Scale: <input id="scale" type="range" min="0.2" max="3" step="0.01" value="1" /></label>
+          <span id="scaleVal">1.00×</span>
+        </div>
+        <div class="row">
+          <button id="reset">Reset</button>
+        </div>
+        <div class="row">
+          <button id="musicBtn">▶️ Play Music</button>
+        </div>
+      </div>
+
+      <audio id="bgmusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
+        Your browser does not support audio.
+      </audio>
+
+      <footer>Put <code>ganesha.glb</code> and <code>music.mp3</code> in the same folder as this file.</footer>
+    </div>
+
+    <script>
+      const viewer = document.getElementById('viewer');
+      const scale = document.getElementById('scale');
+      const scaleVal = document.getElementById('scaleVal');
+      const reset = document.getElementById('reset');
+      const music = document.getElementById('bgmusic');
+      const musicBtn = document.getElementById('musicBtn');
+      let playing = false;
+
+      function applyScale(v) {
+        const s = parseFloat(v);
+        viewer.scale = `${s} ${s} ${s}`;
+        scaleVal.textContent = s.toFixed(2) + '×';
+      }
+      scale.addEventListener('input', (e) => applyScale(e.target.value));
+      reset.addEventListener('click', () => {
+        scale.value = 1;
+        applyScale(1);
+        viewer.cameraOrbit = '0deg 75deg auto';
+      
+      applyScale(scale.value);
+
+      musicBtn.addEventListener('click', () => {
+        if (!playing) {
+          music.play();
+          playing = true;
+          musicBtn.textContent = "⏸ Pause Music";
+        } else {
+          music.pause();
+          playing = false;
+          musicBtn.textContent = "▶️ Play Music";
+        }
+      });
+    </script>
+  </body>
+</html>
+      
+    </script>
+  </body>
+</html>
+
